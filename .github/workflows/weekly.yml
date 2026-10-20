@@ -1,0 +1,47 @@
+name: Weekly dataset search
+
+on:
+  schedule:
+    - cron: "0 15 * * 1"   # every Monday, 15:00 UTC (8am Pacific in summer, 7am in winter)
+  workflow_dispatch: {}      # lets you press "Run workflow" for a live demo
+
+permissions:
+  contents: write            # so the run can save seen.json / candidates.json back
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      SHEET_ID: ${{ secrets.SHEET_ID }}
+      SHEET_URL: ${{ secrets.SHEET_URL }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install gspread
+
+      - name: Search arXiv + Zenodo and screen with Gemini
+        run: python updater.py --llm gemini --days 14
+
+      - name: Add new rows to the Google Sheet
+        env:
+          SA_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo "$SA_JSON" > sa.json
+          GOOGLE_SERVICE_ACCOUNT_FILE=sa.json python sheet_sync.py
+          rm sa.json
+
+      - name: Message Alan on Slack
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        run: python notify.py
+
+      - name: Save state so the next run skips what was already seen
+        run: |
+          git config user.name "dataset-bot"
+          git config user.email "dataset-bot@users.noreply.github.com"
+          git add seen.json candidates.json
+          git diff --staged --quiet || git commit -m "Weekly search results"
+          git push

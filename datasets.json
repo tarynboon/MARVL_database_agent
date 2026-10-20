@@ -1,0 +1,160 @@
+{
+  "last_checked": "2026-10-19",
+  "note": "Name list used for de-duplication. Full bullets are in the Word master list.",
+  "datasets": [
+    {
+      "name": "Cholec80",
+      "url": "http://camma.u-strasbg.fr/datasets",
+      "category": "Cholecystectomy",
+      "access": "request",
+      "status": "published"
+    },
+    {
+      "name": "CholecT50",
+      "url": "https://github.com/CAMMA-public/cholect50",
+      "category": "Cholecystectomy",
+      "access": "request",
+      "status": "published"
+    },
+    {
+      "name": "CholecTrack20",
+      "url": "https://github.com/CAMMA-public/cholectrack20",
+      "category": "Cholecystectomy",
+      "access": "request",
+      "status": "published"
+    },
+    {
+      "name": "HeiChole",
+      "url": "https://deepai.org/publication/comparative-validation-of-machine-learning-algorithms-for-surgical-workflow-and-skill-analysis-with-the-heichole-benchmark",
+      "category": "Cholecystectomy",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "Endoscapes2023",
+      "url": "https://www.nature.com/articles/s41597-025-04642-4",
+      "category": "Cholecystectomy",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "CholecSeg8k",
+      "url": "https://www.kaggle.com/datasets/newslab/cholecseg8k",
+      "category": "Cholecystectomy",
+      "access": "direct",
+      "status": "published"
+    },
+    {
+      "name": "CholecInstanceSeg",
+      "url": "https://www.nature.com/articles/s41597-025-05163-w",
+      "category": "Cholecystectomy",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "M2CAI16 Workflow (TUM LapChole)",
+      "url": "",
+      "category": "Cholecystectomy",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "MultiBypass140",
+      "url": "https://github.com/CAMMA-public/MultiBypass140",
+      "category": "Bariatric Surgery",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "GynSurg",
+      "url": "https://ftp.itec.aau.at/datasets/GynSurge/",
+      "category": "Gynecology",
+      "access": "request",
+      "status": "published"
+    },
+    {
+      "name": "AutoLaparo",
+      "url": "https://autolaparo.github.io/",
+      "category": "Gynecology",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "LapGyn4",
+      "url": "https://www.researchgate.net/publication/326025159_Lapgyn4_a_dataset_for_4_automatic_content_analysis_problems_in_the_domain_of_laparoscopic_gynecology",
+      "category": "Gynecology",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "SurgicalActions160",
+      "url": "http://ftp.itec.aau.at/datasets/SurgicalActions160/",
+      "category": "Gynecology",
+      "access": "direct",
+      "status": "published"
+    },
+    {
+      "name": "GLENDA",
+      "url": "",
+      "category": "Gynecology",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "SurgAI",
+      "url": "",
+      "category": "Gynecology",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "Appendix300",
+      "url": "https://www.nature.com/articles/s41597-026-07593-6",
+      "category": "Abdominal and Other Procedures",
+      "access": "direct",
+      "status": "published"
+    },
+    {
+      "name": "SLAM (Surgical LAparoscopic Motions)",
+      "url": "https://figshare.com/articles/dataset/SLAM_-_Surgical_LAparoscopic_Motions/28104782",
+      "category": "Abdominal and Other Procedures",
+      "access": "direct",
+      "status": "published"
+    },
+    {
+      "name": "Dresden Surgical Anatomy Dataset",
+      "url": "https://www.nature.com/articles/s41597-022-01719-2",
+      "category": "Abdominal and Other Procedures",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "EndoVis ROBUST-MIS (2019)",
+      "url": "",
+      "category": "Abdominal and Other Procedures",
+      "access": "unconfirmed",
+      "status": "published"
+    },
+    {
+      "name": "PhaKIR",
+      "url": "https://arxiv.org/html/2511.06549v1",
+      "category": "Abdominal and Other Procedures",
+      "access": "request",
+      "status": "published"
+    },
+    {
+      "name": "CDS-COSA 2026",
+      "url": "https://zenodo.org/records/20627949",
+      "category": "Abdominal and Other Procedures",
+      "access": "direct",
+      "status": "published"
+    },
+    {
+      "name": "Laparoscopic Surgical Performance Dataset (LSPD)",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12009314/",
+      "category": "Abdominal and Other Procedures",
+      "access": "unconfirmed",
+      "status": "published"
+    }
+  ]
+}
