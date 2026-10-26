@@ -2,7 +2,7 @@ name: Weekly dataset search
 
 on:
   schedule:
-    - cron: "0 15 * * 1"   # every Monday, 15:00 UTC (8am Pacific in summer, 7am in winter)
+    - cron: "5 20 * * 1"   # every Monday, 15:00 UTC (8am Pacific in summer, 7am in winter)
   workflow_dispatch: {}      # lets you press "Run workflow" for a live demo
 
 permissions:
