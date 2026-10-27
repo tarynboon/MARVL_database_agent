@@ -2,7 +2,7 @@ name: Weekly dataset search
 
 on:
   schedule:
-    - cron: "5 20 * * 1"   # every Monday, 15:00 UTC (8am Pacific in summer, 7am in winter)
+    - cron: "5 20 * * 1"   # Mondays 20:05 UTC = 1:05pm Pacific daylight time (12:05pm Nov-Mar; use "5 21 * * 1" for 1:05pm in winter)
   workflow_dispatch: {}      # lets you press "Run workflow" for a live demo
 
 permissions:
@@ -16,6 +16,9 @@ jobs:
       SHEET_ID: ${{ secrets.SHEET_ID }}
       SHEET_URL: ${{ secrets.SHEET_URL }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -37,6 +40,10 @@ jobs:
       - name: Message Alan on Slack
         if: ${{ env.SLACK_WEBHOOK_URL != '' }}
         run: python notify.py
+
+      - name: Email the new candidates
+        if: ${{ env.SMTP_PASS != '' && env.EMAIL_TO != '' }}
+        run: python email_notify.py
 
       - name: Save state so the next run skips what was already seen
         run: |
