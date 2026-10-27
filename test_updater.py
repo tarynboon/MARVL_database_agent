@@ -116,6 +116,22 @@ class Run(unittest.TestCase):
         self.assertTrue(any("Stopped early" in m for m in logs))
 
 
+class Unreadable(unittest.TestCase):
+    def test_unreadable_or_incomplete_reply_is_retried_not_marked_seen(self):
+        today = datetime.date.today().isoformat()
+        base = {"source": "arxiv", "url": "https://a/", "date": today, "access": "unconfirmed"}
+        updater.discover = lambda days: [dict(base, source_id="a:1", title="A dataset", text="We release data."),
+                                         dict(base, source_id="a:2", title="B dataset", text="We release data."),
+                                         dict(base, source_id="a:3", title="C dataset", text="We release data.")]
+        replies = iter(["", '{"is_dataset": true, "name": "B"}', '{"is_dataset": false}'])
+        logs = []
+        entries, processed = updater.find_candidates(DATASETS, [], [], extract=lambda p: next(replies), log=logs.append)
+        self.assertEqual(entries, [])
+        self.assertEqual(processed, ["a:3"])  # only the clean "not a dataset" answer counts as seen
+        self.assertTrue(any("unreadable" in m for m in logs))
+        self.assertTrue(any("incomplete" in m for m in logs))
+
+
 class Gemini(unittest.TestCase):
     def test_retries_on_503_then_returns_text(self):
         import io, os, urllib.error, urllib.request

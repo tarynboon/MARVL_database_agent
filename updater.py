@@ -172,6 +172,7 @@ def call_gemini(prompt):
                 with urllib.request.urlopen(req, timeout=timeout) as r:
                     out = json.load(r)
                 cands = out.get("candidates") or [{}]
+                print("  answered by %s" % model, flush=True)
                 return "".join(p.get("text", "") for p in (cands[0].get("content") or {}).get("parts", []))
             except urllib.error.HTTPError as exc:
                 detail = exc.read().decode("utf-8", "replace")[:300]
@@ -270,14 +271,23 @@ def find_candidates(datasets, seen, candidates, days=30, extract=call_claude,
         except Exception as exc:  # keep what we have instead of losing the whole run
             log("Stopped early: %s" % exc)
             break
-        processed.append(h["source_id"])
+        if reply is None:  # empty or cut-off answer: do NOT mark as seen, retry next run
+            log("   -> unreadable reply, will retry next run")
+            continue
         entry = to_entry(h, reply, categories, today)
+        if reply.get("is_dataset") is True and entry is None:
+            log("   -> incomplete reply (name/category/bullets), will retry next run")
+            continue
+        processed.append(h["source_id"])
         if entry and already_known(entry["name"], known):
-            entry = None  # already in the list under another title
+            log("   -> skip (already in the list as another entry)")
+            continue
         if entry:
             entries.append(entry)
             known.add(norm(entry["name"]))
-        log("   -> %s" % (("PROPOSED: " + entry["name"]) if entry else "skip"))
+            log("   -> PROPOSED: %s" % entry["name"])
+        else:
+            log("   -> skip (not a dataset release)")
     return entries, processed
 
 
