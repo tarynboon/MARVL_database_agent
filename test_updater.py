@@ -135,6 +135,41 @@ class Gemini(unittest.TestCase):
             urllib.request.urlopen, updater.time.sleep = real_open, real_sleep
         self.assertEqual(len(calls), 2)
 
+    def test_falls_back_to_next_model_on_persistent_503_and_timeout(self):
+        import io, os, urllib.error, urllib.request
+        os.environ["GEMINI_API_KEY"] = "x"
+        os.environ.pop("GEMINI_MODEL", None)
+        urls = []
+
+        def fake_urlopen(req, timeout=0):
+            urls.append(req.full_url)
+            if "flash-latest" in req.full_url and "lite" not in req.full_url:
+                raise urllib.error.HTTPError("u", 503, "busy", {}, io.BytesIO(b"{}"))
+            if "lite" in req.full_url:
+                raise TimeoutError("timed out")
+            return io.BytesIO(b'{"candidates":[{"content":{"parts":[{"text":"ok"}]}}]}')
+        real_open, real_sleep = urllib.request.urlopen, updater.time.sleep
+        urllib.request.urlopen, updater.time.sleep = fake_urlopen, lambda s: None
+        try:
+            self.assertEqual(updater.call_gemini("p"), "ok")
+        finally:
+            urllib.request.urlopen, updater.time.sleep = real_open, real_sleep
+        self.assertIn("gemini-3.8-flash", urls[-1])
+
+    def test_all_models_down_raises(self):
+        import io, os, urllib.error, urllib.request
+        os.environ["GEMINI_API_KEY"] = "x"
+
+        def fake_urlopen(req, timeout=0):
+            raise urllib.error.HTTPError("u", 503, "busy", {}, io.BytesIO(b"{}"))
+        real_open, real_sleep = urllib.request.urlopen, updater.time.sleep
+        urllib.request.urlopen, updater.time.sleep = fake_urlopen, lambda s: None
+        try:
+            with self.assertRaises(RuntimeError):
+                updater.call_gemini("p")
+        finally:
+            urllib.request.urlopen, updater.time.sleep = real_open, real_sleep
+
 
 if __name__ == "__main__":
     unittest.main()

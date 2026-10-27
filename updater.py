@@ -148,35 +148,47 @@ def call_claude(prompt):
     return "".join(b.get("text", "") for b in out["content"] if b.get("type") == "text")
 
 
+GEMINI_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.8-flash"]
+
+
 def call_gemini(prompt):
-    """Free alternative to call_claude. Plain generation, no web search."""
+    """Free alternative to call_claude. Plain generation, no web search.
+    Tries each model in turn: a busy, slow or missing model falls through to the next.
+    Set GEMINI_MODEL to put your own choice first."""
     key = os.environ.get("GEMINI_API_KEY")
     if not key:
         sys.exit("GEMINI_API_KEY is not set. Get a free key at https://aistudio.google.com/apikey")
-    model = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
-    url = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % model
+    models = ([os.environ["GEMINI_MODEL"]] if os.environ.get("GEMINI_MODEL") else []) + GEMINI_MODELS
+    timeout = int(os.environ.get("GEMINI_TIMEOUT", "40"))
     body = json.dumps({"contents": [{"role": "user", "parts": [{"text": prompt}]}],
                        "generationConfig": {"temperature": 0.1}}).encode()
-    for attempt in range(4):
-        req = urllib.request.Request(url, data=body, headers={
-            "x-goog-api-key": key, "content-type": "application/json"})
-        try:
-            with urllib.request.urlopen(req, timeout=int(os.environ.get("GEMINI_TIMEOUT", "40"))) as r:
-                out = json.load(r)
-            cands = out.get("candidates") or [{}]
-            return "".join(p.get("text", "") for p in (cands[0].get("content") or {}).get("parts", []))
-        except urllib.error.HTTPError as exc:
-            if exc.code in (429, 503) and attempt < 3:  # busy or rate limited: wait and retry
-                print("  Gemini busy (%s), retrying..." % exc.code, flush=True)
-                time.sleep(5 * (attempt + 1))
-                continue
-            raise RuntimeError("Gemini API error %s: %s" % (exc.code, exc.read().decode("utf-8", "replace")[:600]))
-        except (TimeoutError, urllib.error.URLError, OSError) as exc:  # slow or dropped connection
-            if attempt < 3:
-                print("  Gemini timed out, retrying...", flush=True)
-                time.sleep(3)
-                continue
-            raise RuntimeError("Gemini did not respond: %s" % exc)
+    last = "no model answered"
+    for model in dict.fromkeys(models):  # drop duplicates, keep order
+        url = "https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent" % model
+        for attempt in range(2):
+            req = urllib.request.Request(url, data=body, headers={
+                "x-goog-api-key": key, "content-type": "application/json"})
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    out = json.load(r)
+                cands = out.get("candidates") or [{}]
+                return "".join(p.get("text", "") for p in (cands[0].get("content") or {}).get("parts", []))
+            except urllib.error.HTTPError as exc:
+                detail = exc.read().decode("utf-8", "replace")[:300]
+                last = "%s: HTTP %s %s" % (model, exc.code, detail)
+                if exc.code in (429, 500, 503) and attempt == 0:
+                    print("  %s busy (%s), retrying..." % (model, exc.code), flush=True)
+                    time.sleep(5)
+                    continue
+                if exc.code in (404, 429, 500, 503):
+                    print("  %s unavailable (%s), trying the next model..." % (model, exc.code), flush=True)
+                    break
+                raise RuntimeError("Gemini API error %s" % last)
+            except (TimeoutError, urllib.error.URLError, OSError) as exc:
+                last = "%s: %s" % (model, exc)
+                print("  %s timed out, trying the next model..." % model, flush=True)
+                break
+    raise RuntimeError("Gemini did not respond (%s)" % last)
 
 
 def build_prompt(hit, categories):
