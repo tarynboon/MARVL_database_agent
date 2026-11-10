@@ -1,1 +1,57 @@
-[]
+[
+  {
+    "name": "ATLAS-120k",
+    "url": "http://arxiv.org/abs/2611.10182v1",
+    "category": "Abdominal and Other Procedures",
+    "access": "unconfirmed",
+    "bullets": [
+      "Size: 121,018 annotated frames from 100 surgical videos",
+      "Procedures covered: 14 laparoscopic and robot-assisted procedures with 41 classes",
+      "What sets it apart: Clip-level semantic segmentation dataset created with a pipeline combining manual labeling, tracker-based propagation, and surgeon review"
+    ],
+    "status": "pending_review",
+    "source": "arxiv",
+    "source_id": "arxiv:2611.10182v1",
+    "source_date": "2026-11-06",
+    "found": "2026-11-10",
+    "synced": true,
+    "emailed": true
+  },
+  {
+    "name": "Reporting completeness of robot-assisted and laparoscopic partial nephrectomy videos on YouTube",
+    "url": "https://zenodo.org/records/24020802",
+    "category": "Abdominal and Other Procedures",
+    "access": "direct",
+    "bullets": [
+      "Contains 248 YouTube videos of robot-assisted and laparoscopic partial nephrectomy",
+      "Includes video identifiers, URLs, channel classification, surgical approach, upload date, duration, views, and likes",
+      "Features item-level scores for the adapted 16-item LAP-VEGaS checklist, JAMA, modified DISCERN, and Global Quality Score totals",
+      "Includes Python scripts to reproduce all analyses reported in the associated article"
+    ],
+    "status": "pending_review",
+    "source": "zenodo",
+    "source_id": "zenodo:24020802",
+    "source_date": "2026-11-06",
+    "found": "2026-11-10",
+    "synced": true,
+    "emailed": true
+  },
+  {
+    "name": "Force-Maximum Interpretability and Rapid Load Decreases in Archived Ex Vivo Porcine Colon Puncture Waveforms",
+    "url": "https://zenodo.org/records/23976128",
+    "category": "Abdominal and Other Procedures",
+    "access": "direct",
+    "bullets": [
+      "Contains 162 ex vivo porcine-colon puncture force-time recordings acquired under varying forceps-shaft inclinations and carriage speeds.",
+      "Includes Python analysis scripts, source and derived CSV datasets, supplementary tables, and reproduction instructions.",
+      "Features descriptive analyses of force maxima, postmaximum force-indication decreases, and negative indications."
+    ],
+    "status": "pending_review",
+    "source": "zenodo",
+    "source_id": "zenodo:23976128",
+    "source_date": "2026-11-05",
+    "found": "2026-11-10",
+    "synced": true,
+    "emailed": true
+  }
+]
