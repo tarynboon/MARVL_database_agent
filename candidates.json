@@ -53,5 +53,23 @@
     "found": "2026-11-10",
     "synced": true,
     "emailed": true
+  },
+  {
+    "name": "Resident physician mental workload assessed with fNIRS",
+    "url": "https://zenodo.org/records/24124674",
+    "category": "Abdominal and Other Procedures",
+    "access": "direct",
+    "bullets": [
+      "Includes video recordings of an origami-folding laparoscopic training task performed by 30 resident physicians at 0, 12, and 24 hours into a shift.",
+      "Accompanied by BIDS-compatible prefrontal functional near-infrared spectroscopy (fNIRS) recordings and task timing data.",
+      "Repeated sampling within a single continuous 24-hour clinical shift separates shift-related change from skill acquisition."
+    ],
+    "status": "pending_review",
+    "source": "zenodo",
+    "source_id": "zenodo:24124674",
+    "source_date": "2026-11-11",
+    "found": "2026-11-17",
+    "synced": true,
+    "emailed": true
   }
 ]
